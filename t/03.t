@@ -1,7 +1,7 @@
 # Before `make install' is performed this script should be runnable with
 # `make test'. After `make install' it should work as `perl 01.t'
 
-# 03.t
+# 03.t	# revised 03/11/2004
 
 END {print "not ok 1\n" unless $loaded;}
 use Test::Simple tests =>
@@ -15,7 +15,7 @@ use Mail::Digest::Tools qw(
     delete_deletables
 );
 use Test::_Test_MDT;
-use List::Compare;
+# use List::Compare;
 use File::Copy;
 # use Data::Dumper;
 use Cwd;
@@ -29,6 +29,8 @@ use warnings;
 
 our (%digest_structure, %digest_output_format);
 # variables imported from $data_file
+our %unix = map {$_, 1} 
+              qw| Unix linux darwin freebsd netbsd openbsd cygwin solaris |;
 
 my $data_file = 'samples/digest.data';
 require $data_file;
@@ -38,6 +40,7 @@ require $data_file;
 
 my (%pw32u_config_in, %pw32u_config_out);
 
+my @intersect;
 my ($k,$v);
 while ( ($k, $v) = each %{$digest_structure{'pw32u'}} ) {
     $pw32u_config_in{$k} = $v;
@@ -50,8 +53,6 @@ my ($digs, %log);
 my ($pw32u_digdir, $pw32u_thrdir);
 $pw32u_digdir = "$pw32u_config_out{'dir_digest'}";
 $pw32u_thrdir = "$pw32u_config_out{'dir_threads'}";
-# ok(-d $pw32u_digdir);
-# ok(-d $pw32u_thrdir);
   
 ########## Test of process_new_digests() on pw32u ##########
 
@@ -59,7 +60,9 @@ $pw32u_thrdir = "$pw32u_config_out{'dir_threads'}";
 # (by observation)
 
 my (@pw32u_tp);
-if ($^O eq 'Unix' or $^O eq 'linux') {
+# if ($^O eq 'Unix' or $^O eq 'linux') {
+# if ($^O =~ /^(Unix|linux|darwin|freebsd|netbsd|openbsd|cygwin)/ ) {
+if ($unix{$^O}) {     # 3/11/2004 revision
     @pw32u_tp = sort {lc($a) cmp lc($b)} (
         'Net::SSH::Perl.thr.txt',
         'Perl and delphi interaction query.thr.txt',
@@ -149,7 +152,7 @@ process_new_digests(\%pw32u_config_in, \%pw32u_config_out);
 
 # test whether log files have grown in size
 
-$log{'log'}{'size'}[1]    = (-s $dl), 'digests log for pw32u has grown';
+$log{'log'}{'size'}[1]    = (-s $dl);
 $log{'read'}{'size'}[1]   = ( (-f $dr) and $drf) ? (-s $dr) : undef;
 $log{'topics'}{'size'}[1] = (-s $tt);
 
@@ -228,8 +231,11 @@ ok($pw32u_tp[0] eq $pw32u_tc[0], 'Net::SSH::Perl.thr.txt');# 14
 ok($pw32u_tp[1] eq $pw32u_tc[1], 'Perl and delphi interaction query.thr.txt');# 15
 ok($pw32u_tp[2] eq $pw32u_tc[2], 'qx broken on Win98.thr.txt');# 16
 
-my $lcpw = List::Compare->new(\@pw32u_tp, \@pw32u_tc);
-ok( ($lcpw->get_intersection()) == @pw32u_tp, # 17
+#my $lcpw = List::Compare->new(\@pw32u_tp, \@pw32u_tc);
+#ok( ($lcpw->get_intersection()) == @pw32u_tp, 
+#    'all pw32u threads predicted have been created');
+@intersect = get_intersection(\@pw32u_tp, \@pw32u_tc);
+ok(@intersect == @pw32u_tp,             # 17
     'all pw32u threads predicted have been created');
 
 # test whether thread files have predicted message count
@@ -383,8 +389,11 @@ ok($pw32u_fp[0] eq $pw32u_fc[0], 'Perl_and_delphi_interaction_query.thr.txt');# 
 ok($pw32u_fp[1] eq $pw32u_fc[1], 'qx_broken_on_Win98.fix.thr.txt');# 32
 
 
-my $lcfpw = List::Compare->new(\@pw32u_fp, \@pw32u_fc);
-ok( ($lcfpw->get_intersection()) == @pw32u_fp, # 33
+#my $lcfpw = List::Compare->new(\@pw32u_fp, \@pw32u_fc);
+#ok( ($lcfpw->get_intersection()) == @pw32u_fp, 
+#    'all pw32u fixed threads predicted have been created');
+@intersect = get_intersection(\@pw32u_fp, \@pw32u_fc);
+ok(@intersect == @pw32u_fp,             # 33
     'all pw32u fixed threads predicted have been created');
 
 # test whether thread files have predicted message count

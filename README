@@ -1,8 +1,8 @@
 # README for Mail::Digest::Tools 
 Mail::Digest::Tools - Tools for digest versions of mailing lists
 
-This document refers to version 2.05 of Mail::Digest::Tools, 
-released March 7, 2004.
+This document refers to version 2.08 of Mail::Digest::Tools, 
+released March 11, 2004.
 
 This version has been fully tested only on a Linux system.  The author is 
 now perfecting the test suite so it tests correctly on a Win32 system.  The 
@@ -14,9 +14,9 @@ than Unix/Linux and Win32.
 To install this module on your system, place the tarball archive file in a 
 temporary directory and call the following:
 
-% gunzip Mail-Digest-Tools-2.05.tar.gz
-% tar xf Mail-Digest-Tools-2.05.tar
-% cd Mail-Digest-Tools-2.05
+% gunzip Mail-Digest-Tools-2.08.tar.gz
+% tar xf Mail-Digest-Tools-2.08.tar
+% cd Mail-Digest-Tools-2.08
 % perl Makefile.PL
 % make
 % make test

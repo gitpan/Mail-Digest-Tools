@@ -1,5 +1,6 @@
 package Mail::Digest::Tools;
-$VERSION = 2.05;        # 03/07/2004
+# $VERSION = 2.07;        # 03/11/2004
+$VERSION = 2.08;        # 03/11/2004
 use strict;
 use warnings;
 use Time::Local;
@@ -18,6 +19,8 @@ our @EXPORT_OK = qw(
 
 our %month30 = map {$_, 1} (4,6,9,11);
 our %month31 = map {$_, 1} (1,3,5,7,8,10,12);
+our %unix    = map {$_, 1} 
+                 qw| Unix linux darwin freebsd netbsd openbsd cygwin solaris |;
 
 ############################### Initializer ###################################
 
@@ -981,7 +984,8 @@ sub _clean_up_thread_title {
     if ($^O eq 'MSWin32') {
         $thread = join("", (grep m/[^*|\\:"<>?\/]/, @thread) ); #"
     }
-    if ($^O eq 'Unix' or $^O eq 'linux') {
+#    if ($^O eq 'Unix' or $^O eq 'linux') {
+    if ($unix{$^O}) {  # v2.08
         $thread = join("", (grep m/[^\/]/, @thread) );
     } 
     # squish repeated periods anywhere in file name
@@ -1264,7 +1268,7 @@ Mail::Digest::Tools - Tools for digest versions of mailing lists
 
 =head1 VERSION
 
-This document refers to version 2.05 of digest.pl, released March 7, 2004.
+This document refers to version 2.08 of digest.pl, released March 11, 2004.
 
 =head1 SYNOPSIS
 
@@ -3795,12 +3799,17 @@ v2.04 (3/05/2004):  No changes in module.  Refinement of test suite only.
 v2.05 (3/07/2004):  Fixed accidental deletion of incrementation of 
 C<$message_count> in C<_strip_down()>.
 
+v2.06 (3/10/2004):   Correction of errors in test suite.  Elimination of use of List::Compare in test suite.
+
+v2.07 (3/11/2004):  Correction of error in t/03.t
+
+v2.08 (3/11/2004):  Correction in _clean_up_thread_title and in tests.
 =head1 AUTHOR
 
 James E. Keenan (F<jkeenan@cpan.org>).
 
 Creation date: August 21, 2000.
-Last modification date: March 7, 2004.
+Last modification date: March 11, 2004.
 Copyright (c) 2000-2004 James E. Keenan.  United States.  All rights reserved.
 
 This software is distributed with absolutely no warranty, express or implied.  

@@ -5,7 +5,7 @@
 # it only tests the entries in digest.data to make sure that the  
 # directory structure needed for testing actually exists
 
-# 3/4/2004 revision
+# 03/10/2004 revision
 
 END {print "not ok 1\n" unless $loaded;}
 use Test::Simple tests =>

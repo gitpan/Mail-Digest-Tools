@@ -9,4 +9,14 @@ xxxx  Sat Feb 14 10:27:53 2004
 
 2.05  Sun Mar  7 20:57:32 EST 2004
       Fixed accidental deletion of incrementation of C<$message_count> in C<_strip_down()>.
-      
+
+2.06  Wed Mar 10 17:45:00 EST 2004
+      Correction of errors in test suite.  Elimination of use of List::Compare
+      in test suite.
+
+2.07  Thu Mar 11 12:26:29 EST 2004
+      Correction of error in t/03.t
+
+2.08  Thu Mar 11 18:37:18 EST 2004
+      Correction in _clean_up_thread_title and in tests.
+

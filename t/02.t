@@ -1,7 +1,7 @@
 # Before `make install' is performed this script should be runnable with
 # `make test'. After `make install' it should work as `perl 01.t'
 
-# 02.t
+# 02.t	# revised 03/10/2004
 
 END {print "not ok 1\n" unless $loaded;}
 use Test::Simple tests =>
@@ -15,7 +15,7 @@ use Mail::Digest::Tools qw(
     delete_deletables
 );
 use Test::_Test_MDT;
-use List::Compare;
+# use List::Compare;
 use File::Copy;
 # use Data::Dumper;
 use Cwd;
@@ -29,6 +29,8 @@ use warnings;
 
 our (%digest_structure, %digest_output_format);
 # variables imported from $data_file
+our %unix = map {$_, 1} 
+              qw| Unix linux darwin freebsd netbsd openbsd cygwin solaris |;
 
 my $data_file = 'samples/digest.data';
 require $data_file;
@@ -38,6 +40,7 @@ require $data_file;
 
 my (%pbml_config_in, %pbml_config_out);
 
+my @intersect;
 my ($k,$v);
 while ( ($k, $v) = each %{$digest_structure{'pbml'}} ) {
     $pbml_config_in{$k} = $v;
@@ -57,7 +60,9 @@ $pbml_thrdir = "$pbml_config_out{'dir_threads'}";
 # (by observation)
 
 my (@pbml_tp);
-if ($^O eq 'Unix' or $^O eq 'linux') {
+# if ($^O eq 'Unix' or $^O eq 'linux') {
+# if ($^O =~ /^(Unix|linux|darwin|freebsd|netbsd|openbsd|cygwin)/ ) {
+if ($unix{$^O}) {     # 3/11/2004 revision
     @pbml_tp = sort {lc($a) cmp lc($b)} (
         'grep over multiple lines.thr.txt',
         'How to $printHeader = \\&$fext::printHeader;.thr.txt',
@@ -267,8 +272,11 @@ ok($pbml_tp[6] eq $pbml_tc[6], 'Returning 2 file handles?.thr.txt');# 20
 ok($pbml_tp[7] eq $pbml_tc[7], 'Young and inexperienced.thr.txt');# 21
 
 
-my $lcpb = List::Compare->new(\@pbml_tp, \@pbml_tc);
-ok( ($lcpb->get_intersection()) == @pbml_tp, # 22
+#my $lcpb = List::Compare->new(\@pbml_tp, \@pbml_tc);
+#ok( ($lcpb->get_intersection()) == @pbml_tp, 
+#    'all pbml threads predicted have been created');
+@intersect = get_intersection(\@pbml_tp, \@pbml_tc);
+ok(@intersect == @pbml_tp,              # 22
     'all pbml threads predicted have been created');
 
 # test whether thread files have predicted message count
@@ -459,8 +467,11 @@ ok($pbml_fp[1] eq $pbml_fc[1], 'Young_and_inexperienced.fix.thr.txt');# 52
 # ok($pbml_fp[7] eq $pbml_fc[7], 'Young_and_inexperienced.fix.thr.txt');
 
 
-my $lcfpb = List::Compare->new(\@pbml_fp, \@pbml_fc);
-ok( ($lcfpb->get_intersection()) == @pbml_fp, # 53
+#my $lcfpb = List::Compare->new(\@pbml_fp, \@pbml_fc);
+#ok( ($lcfpb->get_intersection()) == @pbml_fp, 
+#    'all pbml fixed threads predicted have been created');
+@intersect = get_intersection(\@pbml_fp, \@pbml_fc);
+ok(@intersect == @pbml_fp,              # 53
     'all pbml fixed threads predicted have been created');
 
 # test whether thread files have predicted message count

@@ -14,6 +14,7 @@ our @EXPORT      = qw(
     test_archive_structure
     empty_as_needed
     truncate_as_needed
+    get_intersection
 );
 
 sub count_records {
@@ -180,4 +181,16 @@ sub truncate_as_needed {
         }
     }
 };
+
+sub get_intersection {
+	die "Incorrect number of arguments for \&get_intersection: $!"
+		unless (@_ == 2);
+	my ($aref1, $aref2) = @_;
+	my (%seenA, @int);
+	$seenA{$_}++ foreach (@$aref1);
+	foreach (@$aref2) {
+		push(@int, $_) if $seenA{$_};
+	}
+	return @int;
+}
 
