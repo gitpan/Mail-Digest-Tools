@@ -1,6 +1,5 @@
 package Mail::Digest::Tools;
-# $VERSION = 2.03;        # 03/04/2004
-$VERSION = 2.04;        # 03/05/2004
+$VERSION = 2.05;        # 03/07/2004
 use strict;
 use warnings;
 use Time::Local;
@@ -632,6 +631,7 @@ MIMELOG
         
         @digest_balance = split(/$source_msg_delimiter/, $digest_bal);
         pop @digest_balance;
+        $message_count += scalar(@digest_balance);
         
         # extract topics listing
         $in_out_ref = _prepare_todays_topics(
@@ -1264,7 +1264,7 @@ Mail::Digest::Tools - Tools for digest versions of mailing lists
 
 =head1 VERSION
 
-This document refers to version 2.04 of digest.pl, released March 5, 2004.
+This document refers to version 2.05 of digest.pl, released March 7, 2004.
 
 =head1 SYNOPSIS
 
@@ -3792,12 +3792,15 @@ Extensive reworking of test suite.
 
 v2.04 (3/05/2004):  No changes in module.  Refinement of test suite only.
 
+v2.05 (3/07/2004):  Fixed accidental deletion of incrementation of 
+C<$message_count> in C<_strip_down()>.
+
 =head1 AUTHOR
 
 James E. Keenan (F<jkeenan@cpan.org>).
 
 Creation date: August 21, 2000.
-Last modification date: March 5, 2004.
+Last modification date: March 7, 2004.
 Copyright (c) 2000-2004 James E. Keenan.  United States.  All rights reserved.
 
 This software is distributed with absolutely no warranty, express or implied.  
@@ -3805,6 +3808,7 @@ Use it at your own risk.  This is free software which you may distribute under
 the same terms as Perl itself.
 
 =cut
+
 
 
 

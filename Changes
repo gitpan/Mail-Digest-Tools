@@ -7,4 +7,6 @@ xxxx  Sat Feb 14 10:27:53 2004
 2.04  Fri Mar  5 18:03:54 EST 2004
       First version released to CPAN.
 
-
+2.05  Sun Mar  7 20:57:32 EST 2004
+      Fixed accidental deletion of incrementation of C<$message_count> in C<_strip_down()>.
+      
