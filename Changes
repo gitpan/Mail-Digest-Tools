@@ -26,4 +26,6 @@ xxxx  Sat Feb 14 10:27:53 2004
 2.10  Mon Jun 07 20:00:00 EDT 2004
       Activated export tag group 'all'
 
- 
+2.11  Sat Oct 23 00:00:00 EDT 2004
+      Fixed several errors which resulted in "Bizarre copy of hash in leave" error when running test suite under Devel::Cover.
+

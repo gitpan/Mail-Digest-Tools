@@ -1,5 +1,5 @@
 package Mail::Digest::Tools;
-$VERSION = 2.1;        # 06/07/2004
+$VERSION = 2.11;        # 10/23/2004
 use strict;
 use warnings;
 use Time::Local;
@@ -538,8 +538,10 @@ sub _update_digests_log {    # must be supplied with ref to %hashlog
     my ($hashlog_ref, $logfile) = @_;
     my ($logstring);
     foreach ( sort keys %$hashlog_ref ) {
-        $logstring .= $_ . ';' . ${%$hashlog_ref}{$_}[0] . ';' . 
-            ${%$hashlog_ref}{$_}[1]. "\n";
+#        $logstring .= $_ . ';' . ${%$hashlog_ref}{$_}[0] . ';' . 
+#            ${%$hashlog_ref}{$_}[1]. "\n";
+        $logstring .= $_ . ';' . ${$hashlog_ref}{$_}[0] . ';' . 
+            ${$hashlog_ref}{$_}[1]. "\n";
     }
     open(LOG, ">$logfile") || die "cannot open $logfile for writing: $!";
     print LOG $logstring;
@@ -552,8 +554,10 @@ sub _update_digests_read {    # must be supplied with $title and ref to %hashlog
     $readstring .= "$title Digest\n";
     foreach ( sort keys %$hashlog_ref ) {
        $readstring .= "\n$_:\n";
-       $readstring .= "    first processed at          ${%$hashlog_ref}{$_}[0]\n"; 
-       $readstring .= "    most recently processed at  ${%$hashlog_ref}{$_}[1]\n";
+#       $readstring .= "    first processed at          ${%$hashlog_ref}{$_}[0]\n"; 
+#       $readstring .= "    most recently processed at  ${%$hashlog_ref}{$_}[1]\n";
+       $readstring .= "    first processed at          ${$hashlog_ref}{$_}[0]\n"; 
+       $readstring .= "    most recently processed at  ${$hashlog_ref}{$_}[1]\n";
     }
     open(READ, ">$readfile") || die "cannot open $readfile for writing: $!";
     print READ $readstring;
@@ -866,8 +870,10 @@ sub _prepare_todays_topics {
                 { push (@todays_topics, $_); }
             else { last; }
         }
-        ${%$in_out_ref}{$digest_no}[1] = [ @todays_topics ];
-        # Note:  this is 1st point at which ${%$in_out_ref}{$digest_no}[1] 
+#        ${%$in_out_ref}{$digest_no}[1] = [ @todays_topics ];
+#        # Note:  this is 1st point at which ${%$in_out_ref}{$digest_no}[1] 
+        ${$in_out_ref}{$digest_no}[1] = [ @todays_topics ];
+        # Note:  this is 1st point at which ${$in_out_ref}{$digest_no}[1] 
         # gets meaningful content
     }
     return $in_out_ref;
@@ -1267,7 +1273,7 @@ Mail::Digest::Tools - Tools for digest versions of mailing lists
 
 =head1 VERSION
 
-This document refers to version 2.1 of digest.pl, released June 7, 2004.
+This document refers to version 2.11 of digest.pl, released October 23, 2004.
 
 =head1 SYNOPSIS
 
@@ -3835,14 +3841,17 @@ v2.06 (3/10/2004):   Correction of errors in test suite.  Elimination of use of 
 v2.07 (3/11/2004):  Correction of error in t/03.t
 
 v2.08 (3/11/2004):  Correction in _clean_up_thread_title and in tests.
-=head1 AUTHOR
 
-v2.1 (3/15/2004):  Corrections to README and documentation only.
+v2.10 (3/15/2004):  Corrections to README and documentation only.
+
+v2.11 (10/23/2004):  Fixed several errors which resulted in "Bizarre copy of hash in leave" error when running test suite under Devel::Cover.
+
+=head1 AUTHOR
 
 James E. Keenan (F<jkeenan@cpan.org>).
 
 Creation date: August 21, 2000.
-Last modification date: June 7, 2004.
+Last modification date: October 23, 2004.
 Copyright (c) 2000-2004 James E. Keenan.  United States.  All rights reserved.
 
 This software is distributed with absolutely no warranty, express or implied.  
