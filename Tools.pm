@@ -1,6 +1,5 @@
 package Mail::Digest::Tools;
-# $VERSION = 2.07;        # 03/11/2004
-$VERSION = 2.08;        # 03/11/2004
+$VERSION = 2.09;        # 03/15/2004
 use strict;
 use warnings;
 use Time::Local;
@@ -89,8 +88,7 @@ sub repair_message_order {
     my (@threadfiles, @resorted_threadfiles);
     chdir $dir_threads or die "Unable to change to $dir_threads: $!";
     opendir DIR, $dir_threads or die "Unable to open $dir_threads: $!";
-#    @threadfiles = readdir DIR;
-    @threadfiles = grep {! m/^\./ } readdir DIR; # v2.03
+    @threadfiles = grep {! m/^\./ } readdir DIR; 
     closedir DIR or die "Unable to close $dir_threads: $!";
     foreach my $in (@threadfiles) {
         my (@msgids);
@@ -451,7 +449,8 @@ sub _prep_source_file {
 }
 
 sub _identify_target_digest {
-    my ($config_in_ref, $config_out_ref, $dig_number, $dig_entry, $digests_ref) = @_;
+    my ($config_in_ref, $config_out_ref, 
+            $dig_number, $dig_entry, $digests_ref) = @_;
     my ($hit);
     foreach my $digfile (@{$digests_ref}) {
         $digfile =~ m/${$config_in_ref}{'pattern_target'}/;
@@ -536,8 +535,8 @@ sub _update_digests_log {    # must be supplied with ref to %hashlog
     my ($hashlog_ref, $logfile) = @_;
     my ($logstring);
     foreach ( sort keys %$hashlog_ref ) {
-        $logstring .= 
-            $_ . ';' . ${%$hashlog_ref}{$_}[0] . ';' . ${%$hashlog_ref}{$_}[1]. "\n";
+        $logstring .= $_ . ';' . ${%$hashlog_ref}{$_}[0] . ';' . 
+            ${%$hashlog_ref}{$_}[1]. "\n";
     }
     open(LOG, ">$logfile") || die "cannot open $logfile for writing: $!";
     print LOG $logstring;
@@ -550,7 +549,7 @@ sub _update_digests_read {    # must be supplied with $title and ref to %hashlog
     $readstring .= "$title Digest\n";
     foreach ( sort keys %$hashlog_ref ) {
        $readstring .= "\n$_:\n";
-       $readstring .= "    first processed at          ${%$hashlog_ref}{$_}[0]\n"; #v1.95
+       $readstring .= "    first processed at          ${%$hashlog_ref}{$_}[0]\n"; 
        $readstring .= "    most recently processed at  ${%$hashlog_ref}{$_}[1]\n";
     }
     open(READ, ">$readfile") || die "cannot open $readfile for writing: $!";
@@ -650,7 +649,7 @@ MIMELOG
             # analyze message's header
             my $header_ref = _analyze_message_header(
                 $el, $config_in_ref, $config_out_ref
-            ); # v1.94
+            ); 
             # clean up message's title to eliminate characters 
             # forbidden as filenames on this system
             my $thread = _clean_up_thread_title(
@@ -703,7 +702,8 @@ MIMELOG
                         : "${$config_out_ref}{'dir_digest'}/de_archived_today.txt";
         my $dir_archive_top = ${$config_out_ref}{'dir_archive_top'};
         my ($dearchstr);
-        open DEARCH, ">$dearchfile" or die "Couldn't open $dearchfile for writing: $!";
+        open DEARCH, ">$dearchfile" 
+            or die "Couldn't open $dearchfile for writing: $!";
         print DEARCH 'De-archived today (', scalar(localtime), "):\n";
         print DEARCH '-' x 44, "\n";
 
@@ -840,7 +840,6 @@ sub _strip_down_for_reply {
         }
         print "On ${$header_ref}{'date'}, ${$header_ref}{'from'} wrote:\n\n";
         print $replytext;
-#        print "> \n";
         print "\n";
         close REPLY or die "Couldn't close $replyfile: $!";
         select $old_fh;
@@ -984,7 +983,6 @@ sub _clean_up_thread_title {
     if ($^O eq 'MSWin32') {
         $thread = join("", (grep m/[^*|\\:"<>?\/]/, @thread) ); #"
     }
-#    if ($^O eq 'Unix' or $^O eq 'linux') {
     if ($unix{$^O}) {  # v2.08
         $thread = join("", (grep m/[^\/]/, @thread) );
     } 
@@ -1004,8 +1002,7 @@ sub _clean_up_thread_title {
 sub _analyze_message_body {
     my ($el, $MIME_cleanup_flag, $postid, $MIME_cleanup_log_flag) = @_;
     my @chunks = split(/\n{2,}/, $el);
-#    return join("\n\n", @chunks[1 .. ($#chunks-1)] )
-    return join("\n\n", @chunks[1 .. ($#chunks)] ) # v2.00
+    return join("\n\n", @chunks[1 .. ($#chunks)] ) 
         unless $MIME_cleanup_flag;
     my (@nextparts);
     if ($chunks[1] =~ /Content-Type:\smultipart\/alternative/o) {    
@@ -1048,8 +1045,7 @@ sub _analyze_message_body {
             return join("\n\n", @chunks );
         }
     } elsif ($chunks[1] !~ /^This.+?message.+?MIME format/o) { 
-#        return join("\n\n", @chunks[1 .. ($#chunks-1)] );
-        return join("\n\n", @chunks[1 .. ($#chunks)] ); # v2.00
+        return join("\n\n", @chunks[1 .. ($#chunks)] ); 
     } else {
         if ($chunks[1] =~ /--=_alternative/) {
             for (my $i=1; $i<=$#chunks; $i++) {
@@ -1070,7 +1066,7 @@ sub _analyze_message_body {
                     if $MIME_cleanup_log_flag;
                 return join("\n\n", @chunks );
             }
-        } elsif ($chunks[1] =~ /cryptographically\ssigned/) { # New in v1.65 1/8/04
+        } elsif ($chunks[1] =~ /cryptographically\ssigned/) { 
             print MIME "$postid CASE H\n" if $MIME_cleanup_log_flag;
             splice @chunks, -3, 2;
             splice @chunks, 1, 2;
@@ -1121,7 +1117,7 @@ sub _prepare_output_string {
     %output = %{$output_ref} if defined $output_ref;
     %opt_fields = %{$optional_fields_ref};
     my ($pathsep, $out, $lc_out, $outstr);
-    $pathsep = ($^O eq 'MSWin32') ? "\\" : '/'; # v1.98
+    $pathsep = ($^O eq 'MSWin32') ? "\\" : '/'; 
     $out = $dir_threads . $pathsep . $messages{$_}[0] . '.thr.txt';
     $lc_out = lc($out);
     $seen{$lc_out}++;
@@ -1268,7 +1264,7 @@ Mail::Digest::Tools - Tools for digest versions of mailing lists
 
 =head1 VERSION
 
-This document refers to version 2.08 of digest.pl, released March 11, 2004.
+This document refers to version 2.09 of digest.pl, released March 15, 2004.
 
 =head1 SYNOPSIS
 
@@ -2391,6 +2387,25 @@ two or more C<\n> newline characters so that they form paragraphs unto
 themselves.  Unless indicated otherwise, the values for all other values in 
 the configuration hash are single-quoted strings.
 
+Note:  In early 2004, while Mail::Digest::Tools was being prepared for its 
+initial distribution on CPAN, ActiveState changed certain features in the 
+daily digest versions of its mailing lists.  Hence, the code example presented 
+above should not be 'copied-and-pasted' into a configuration hash with which 
+you, the user, might follow the current Perl-Win32-Users digest.  In 
+particular, the source message delimiter was changed to a string of 30 
+hyphens followed by 2 C<\n> newline characters:
+
+    "------------------------------\n\n"
+
+However, since it is not unheard of for contributors to a mailing list to use 
+such a string of hyphens within their postings or signatures, using a string 
+of hyphens is not a particularly apt choice for a source message delimiter.  
+In this particular case, the author is getting better (but not fully tested) 
+results by including an additional newline I<before> the hyphen string in 
+order to more uniquely identify the source message delimiter:
+
+    "\n------------------------------\n\n"
+
 =head2 Analysis of Individual Messages
 
 The internal structure of an individual message within a digest is also 
@@ -2484,8 +2499,12 @@ occurs when a list allows a subscriber to post in 'multipart MIME format' and
 then fails to strip out the redundant HTML part after printing the needed 
 plain-text part.
 
-I<Example:>  An all too typical example from an ActiveState list digest.  The 
-message begins:
+I<Example:>  An all too typical example from an older version of an ActiveState 
+list digest.  (ActiveState changed the format of its digests in early 2004 to 
+strip out HTML attachments.  Hence, the following code no longer accurately 
+represents what a subscriber to an ActiveState digest will see.  Other mailing 
+lists still suffer from MIME bloat, however, so treat the following code as 
+illustrative.)  The message begins:
 
     Message: 1
     To: Perl-Win32-Users@activestate.com
@@ -2856,7 +2875,16 @@ Perl-Win32-Users to be the same as its C<source_msg_delimiter>.
         ...
     );
 
-However, for threads generated by appling Mail::Digest::Tools to the Perl 
+Note:  In light of the earlier discussion of the changes ActiveState made 
+to its mailing list digests in early 2004, the reader is cautioned that the 
+code above should not be directly 'copied-and-pasted' into a configuration 
+hash with which you might follow an ActiveState mailing list.  Treat it as 
+educational.  In particular, the author is now testing the following as a 
+setting for C<$pw32u_config_out{'thread_msg_delimiter'}>:
+
+    "\n--__--__--\n\n",
+
+For threads generated by appling Mail::Digest::Tools to the Perl 
 Beginners list, we choose an output message delimiter which differs from the 
 source message delimiter.
 
@@ -3806,10 +3834,12 @@ v2.07 (3/11/2004):  Correction of error in t/03.t
 v2.08 (3/11/2004):  Correction in _clean_up_thread_title and in tests.
 =head1 AUTHOR
 
+v2.09 (3/15/2004):  Corrections to README and documentation only.
+
 James E. Keenan (F<jkeenan@cpan.org>).
 
 Creation date: August 21, 2000.
-Last modification date: March 11, 2004.
+Last modification date: March 15, 2004.
 Copyright (c) 2000-2004 James E. Keenan.  United States.  All rights reserved.
 
 This software is distributed with absolutely no warranty, express or implied.  

@@ -1,22 +1,19 @@
 # README for Mail::Digest::Tools 
 Mail::Digest::Tools - Tools for digest versions of mailing lists
 
-This document refers to version 2.08 of Mail::Digest::Tools, 
-released March 11, 2004.
-
-This version has been fully tested only on a Linux system.  The author is 
-now perfecting the test suite so it tests correctly on a Win32 system.  The 
-code from Tools.pm itself should work correctly on Win32.
+This document refers to version 2.09 of Mail::Digest::Tools, 
+released March 15, 2004.
 
 This module is not currently expected to work on operating systems other 
-than Unix/Linux and Win32.
+than Unix-like systems (including Linux, FreeBSD, Solaris and Darwin) 
+and Win32.
 
 To install this module on your system, place the tarball archive file in a 
 temporary directory and call the following:
 
-% gunzip Mail-Digest-Tools-2.08.tar.gz
-% tar xf Mail-Digest-Tools-2.08.tar
-% cd Mail-Digest-Tools-2.08
+% gunzip Mail-Digest-Tools-2.09.tar.gz
+% tar xf Mail-Digest-Tools-2.09.tar
+% cd Mail-Digest-Tools-2.09
 % perl Makefile.PL
 % make
 % make test
@@ -51,17 +48,9 @@ mailing list):
 % perl Makefile.PL INSTALLSITEMAN3DIR=/usr/share/man/man3
 
 Mail::Digest::Tools uses the Time::Local module which is part of the 
-standard Perl distribution.
-
-The test suite for Mail::Digest::Tools uses the Cwd and File::Copy 
-modules, both of which are part of the standard Perl distribution.  In
-addition, the test suite uses CPAN module List::Compare, by the same 
-author.  You may either install List::Compare manually before installing 
-Mail::Digest::Tools or, if using the cpan prompt, allow the module to 
-install automatically.  (Mail::Digest::Tools does not itself use 
-List::Compare.)
-
-Other than what is described just above, there are no module 
+standard Perl distribution.  The test suite for Mail::Digest::Tools 
+uses the Cwd and File::Copy modules, both of which are part of the 
+standard Perl distribution.  Other than this, there are no module 
 dependencies in this version of Mail::Digest::Tools.
 
 In sending e-mail to the author, please put "Mail::Digest::Tools" or 
