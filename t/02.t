@@ -1,23 +1,22 @@
 # Before `make install' is performed this script should be runnable with
 # `make test'. After `make install' it should work as `perl 01.t'
 
-# 02.t	# revised 03/10/2004
+# 02.t	# revised 06/07/2004
 
 END {print "not ok 1\n" unless $loaded;}
 use Test::Simple tests =>
 68;
 use lib ("./t");
-use Mail::Digest::Tools qw( 
-    process_new_digests 
-    reply_to_digest_message
-    repair_message_order
-    consolidate_threads_single
-    delete_deletables
-);
+use Mail::Digest::Tools qw(:all); 
+#use Mail::Digest::Tools qw( 
+#    process_new_digests 
+#    reply_to_digest_message
+#    repair_message_order
+#    consolidate_threads_single
+#    delete_deletables
+#);
 use Test::_Test_MDT;
-# use List::Compare;
 use File::Copy;
-# use Data::Dumper;
 use Cwd;
 my $startdir = cwd(); # startdir is dir where Makefile.PL is located
 

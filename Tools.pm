@@ -1,5 +1,5 @@
 package Mail::Digest::Tools;
-$VERSION = 2.09;        # 03/15/2004
+$VERSION = 2.1;        # 06/07/2004
 use strict;
 use warnings;
 use Time::Local;
@@ -12,6 +12,9 @@ our @EXPORT_OK = qw(
     consolidate_threads_multiple
     consolidate_threads_single
     delete_deletables
+);
+our %EXPORT_TAGS = (
+    all => \@EXPORT_OK,
 );
 
 ########################## Package Variables ###################################
@@ -1264,7 +1267,7 @@ Mail::Digest::Tools - Tools for digest versions of mailing lists
 
 =head1 VERSION
 
-This document refers to version 2.09 of digest.pl, released March 15, 2004.
+This document refers to version 2.1 of digest.pl, released June 7, 2004.
 
 =head1 SYNOPSIS
 
@@ -3834,12 +3837,12 @@ v2.07 (3/11/2004):  Correction of error in t/03.t
 v2.08 (3/11/2004):  Correction in _clean_up_thread_title and in tests.
 =head1 AUTHOR
 
-v2.09 (3/15/2004):  Corrections to README and documentation only.
+v2.1 (3/15/2004):  Corrections to README and documentation only.
 
 James E. Keenan (F<jkeenan@cpan.org>).
 
 Creation date: August 21, 2000.
-Last modification date: March 15, 2004.
+Last modification date: June 7, 2004.
 Copyright (c) 2000-2004 James E. Keenan.  United States.  All rights reserved.
 
 This software is distributed with absolutely no warranty, express or implied.  
