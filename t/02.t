@@ -8,13 +8,6 @@ use Test::Simple tests =>
 68;
 use lib ("./t");
 use Mail::Digest::Tools qw(:all); 
-#use Mail::Digest::Tools qw( 
-#    process_new_digests 
-#    reply_to_digest_message
-#    repair_message_order
-#    consolidate_threads_single
-#    delete_deletables
-#);
 use Test::_Test_MDT;
 use File::Copy;
 use Cwd;
@@ -29,7 +22,7 @@ use warnings;
 our (%digest_structure, %digest_output_format);
 # variables imported from $data_file
 our %unix = map {$_, 1} 
-              qw| Unix linux darwin freebsd netbsd openbsd cygwin solaris |;
+    qw| Unix linux darwin freebsd netbsd openbsd mirbsd cygwin solaris |;
 
 my $data_file = 'samples/digest.data';
 require $data_file;
@@ -59,8 +52,6 @@ $pbml_thrdir = "$pbml_config_out{'dir_threads'}";
 # (by observation)
 
 my (@pbml_tp);
-# if ($^O eq 'Unix' or $^O eq 'linux') {
-# if ($^O =~ /^(Unix|linux|darwin|freebsd|netbsd|openbsd|cygwin)/ ) {
 if ($unix{$^O}) {     # 3/11/2004 revision
     @pbml_tp = sort {lc($a) cmp lc($b)} (
         'grep over multiple lines.thr.txt',
@@ -271,9 +262,6 @@ ok($pbml_tp[6] eq $pbml_tc[6], 'Returning 2 file handles?.thr.txt');# 20
 ok($pbml_tp[7] eq $pbml_tc[7], 'Young and inexperienced.thr.txt');# 21
 
 
-#my $lcpb = List::Compare->new(\@pbml_tp, \@pbml_tc);
-#ok( ($lcpb->get_intersection()) == @pbml_tp, 
-#    'all pbml threads predicted have been created');
 @intersect = get_intersection(\@pbml_tp, \@pbml_tc);
 ok(@intersect == @pbml_tp,              # 22
     'all pbml threads predicted have been created');
@@ -390,21 +378,6 @@ chdir $startdir or die "Couldn't change back to $startdir: $!";
 $dir_threads_orig = $pbml_config_out{'dir_threads'};
 $pbml_config_out{'dir_threads'} = "$startdir/t/repair/pbml";
 
-# make predictions
-
-#|foreach my $orig (@pbml_tp) {
-#|	if ($orig =~ /(.*)(\.thr\.txt)$/) {
-#|		push(@pbml_fp, "$1.fix$2");
-#|	} else {
-#|		die "Couldn't predict name of fixed file: $!";
-#|	}
-#|}
-#|
-#|for (my $k=0; $k <= $#pbml_tp; $k++) {
-#|	$pbml_fp{$pbml_fp[$k]}     = $pbml_tp{$pbml_tp[$k]};
-#|	$pbml_fmessp{$pbml_fp[$k]} = $pbml_messp{$pbml_tp[$k]};
-#|}
-
 @pbml_fp = ( qw|
     grep_over_multiple_lines.fix.thr.txt
     Young_and_inexperienced.fix.thr.txt
@@ -448,27 +421,10 @@ closedir DIR or die "Couldn't close dir: $!";
 # ok(@pbml_fc == 8, '8 threads fixed from pbml');
 ok(@pbml_fc == 2, '2 threads fixed from pbml');# 50
 
-#|my $dump = "$startdir/dump";
-#|open DUMP, ">$dump" or die "Couldn't open $dump for writing: $!";
-#|print DUMP Dumper(\@pbml_fp, \@pbml_fc);
-#|close DUMP or die "Couldn't close $dump after writing: $!";
-
 # test whether fixed files have names predicted
 
 ok($pbml_fp[0] eq $pbml_fc[0], 'grep_over_multiple_lines.fix.thr.txt');# 51
 ok($pbml_fp[1] eq $pbml_fc[1], 'Young_and_inexperienced.fix.thr.txt');# 52
-# ok($pbml_fp[1] eq $pbml_fc[1], 'How to $printHeader = \\&$fext::printHeader;.fix.thr.txt');
-# ok($pbml_fp[2] eq $pbml_fc[2], 'HOW TO DO This.fix.thr.txt');
-# ok($pbml_fp[3] eq $pbml_fc[3], 'how to get the current working directory.fix.thr.txt');
-# ok($pbml_fp[4] eq $pbml_fc[4], 'newbie -> pattern matching.fix.thr.txt');
-# ok($pbml_fp[5] eq $pbml_fc[5], 'One way to: $printHeader = \\&$fext::printHeader;.fix.thr.txt');
-# ok($pbml_fp[6] eq $pbml_fc[6], 'Returning 2 file handles?.fix.thr.txt');
-# ok($pbml_fp[7] eq $pbml_fc[7], 'Young_and_inexperienced.fix.thr.txt');
-
-
-#my $lcfpb = List::Compare->new(\@pbml_fp, \@pbml_fc);
-#ok( ($lcfpb->get_intersection()) == @pbml_fp, 
-#    'all pbml fixed threads predicted have been created');
 @intersect = get_intersection(\@pbml_fp, \@pbml_fc);
 ok(@intersect == @pbml_fp,              # 53
     'all pbml fixed threads predicted have been created');
@@ -478,18 +434,6 @@ ok(${$pbml_fp{$pbml_fp[0]}}[0] == verify_message_count(# 54
               $pbml_fc[0], $tmd));
 ok(${$pbml_fp{$pbml_fp[1]}}[0] == verify_message_count(# 55
               $pbml_fc[1], $tmd));
-# ok(${$pbml_fp{$pbml_fp[2]}}[0] == verify_message_count(
-#               $pbml_fc[2], $tmd));
-# ok(${$pbml_fp{$pbml_fp[3]}}[0] == verify_message_count(
-#               $pbml_fc[3], $tmd));
-# ok(${$pbml_fp{$pbml_fp[4]}}[0] == verify_message_count(
-#               $pbml_fc[4], $tmd));
-# ok(${$pbml_fp{$pbml_fp[5]}}[0] == verify_message_count(
-#               $pbml_fc[5], $tmd));
-# ok(${$pbml_fp{$pbml_fp[6]}}[0] == verify_message_count(
-#               $pbml_fc[6], $tmd));
-# ok(${$pbml_fp{$pbml_fp[7]}}[0] == verify_message_count(
-#               $pbml_fc[7], $tmd));
 
 # test whether messages in thread files are correct and appear in 
 # predicted sequence
@@ -498,18 +442,6 @@ ok( compare_arrays(\@{$pbml_fmessp{$pbml_fp[0]}}, # 56
       get_message_numbers_created($pbml_fc[0], $tmd) ) );
 ok( compare_arrays(\@{$pbml_fmessp{$pbml_fp[1]}}, # 57
       get_message_numbers_created($pbml_fc[1], $tmd) ) );
-# ok( compare_arrays(\@{$pbml_fmessp{$pbml_fp[2]}}, 
-#       get_message_numbers_created($pbml_fc[2], $tmd) ) );
-# ok( compare_arrays(\@{$pbml_fmessp{$pbml_fp[3]}}, 
-#       get_message_numbers_created($pbml_fc[3], $tmd) ) );
-# ok( compare_arrays(\@{$pbml_fmessp{$pbml_fp[4]}}, 
-#       get_message_numbers_created($pbml_fc[4], $tmd) ) );
-# ok( compare_arrays(\@{$pbml_fmessp{$pbml_fp[5]}}, 
-#       get_message_numbers_created($pbml_fc[5], $tmd) ) );
-# ok( compare_arrays(\@{$pbml_fmessp{$pbml_fp[6]}}, 
-#       get_message_numbers_created($pbml_fc[6], $tmd) ) );
-# ok( compare_arrays(\@{$pbml_fmessp{$pbml_fp[7]}}, 
-#       get_message_numbers_created($pbml_fc[7], $tmd) ) );
 
 # test whether messages in thread files have predicted number of paragraphs
 
@@ -517,18 +449,6 @@ ok( compare_arrays(${$pbml_fp{$pbml_fp[0]}}[1], # 58
           get_paragraph_count($pbml_fp[0], $tmd) ) );
 ok( compare_arrays(${$pbml_fp{$pbml_fp[1]}}[1], # 59
           get_paragraph_count($pbml_fp[1], $tmd) ) );
-# ok( compare_arrays(${$pbml_fp{$pbml_fp[2]}}[1], 
-#           get_paragraph_count($pbml_fp[2], $tmd) ) );
-# ok( compare_arrays(${$pbml_fp{$pbml_fp[3]}}[1], 
-#           get_paragraph_count($pbml_fp[3], $tmd) ) );
-# ok( compare_arrays(${$pbml_fp{$pbml_fp[4]}}[1], 
-#           get_paragraph_count($pbml_fp[4], $tmd) ) );
-# ok( compare_arrays(${$pbml_fp{$pbml_fp[5]}}[1], 
-#           get_paragraph_count($pbml_fp[5], $tmd) ) );
-# ok( compare_arrays(${$pbml_fp{$pbml_fp[6]}}[1], 
-#           get_paragraph_count($pbml_fp[6], $tmd) ) );
-# ok( compare_arrays(${$pbml_fp{$pbml_fp[7]}}[1], 
-#           get_paragraph_count($pbml_fp[7], $tmd) ) );
 
 chdir $startdir or die "Couldn't change back to $startdir: $!";
 
@@ -607,11 +527,6 @@ opendir DIR, $consol_out_dir or die "Couldn't open dir: $!";
                grep {/\.thr\.txt\.DELETABLE$/} 
                readdir DIR;
 closedir DIR or die "Couldn't close dir: $!";
-
-#my $dump = "$startdir/t/dump";
-#open DUMP, ">$dump" or die "Couldn't open $dump for writing: $!";
-#print DUMP Dumper(\@del_predicted, \@del_created);
-#close DUMP or die "Couldn't close $dump after writing: $!";
 
 # test whether correct number of deletable files were created
 

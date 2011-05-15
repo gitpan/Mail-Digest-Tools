@@ -1,9 +1,9 @@
 Perl-Win32-Users Digest
 
 001_0001:
-    first processed at          Fri Oct 22 23:32:00 2004
-    most recently processed at  Fri Oct 22 23:32:00 2004
+    first processed at          Sat May 14 22:55:41 2011
+    most recently processed at  Sat May 14 22:55:41 2011
 
 001_0002:
-    first processed at          Fri Oct 22 23:32:00 2004
-    most recently processed at  Fri Oct 22 23:32:00 2004
+    first processed at          Sat May 14 22:55:41 2011
+    most recently processed at  Sat May 14 22:55:41 2011

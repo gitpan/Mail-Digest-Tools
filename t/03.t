@@ -1,20 +1,13 @@
 # Before `make install' is performed this script should be runnable with
 # `make test'. After `make install' it should work as `perl 01.t'
 
-# 03.t	# revised 06/07/2004
+# 03.t
 
 END {print "not ok 1\n" unless $loaded;}
 use Test::Simple tests =>
 48;
 use lib ("./t");
 use Mail::Digest::Tools qw(:all); 
-#use Mail::Digest::Tools qw( 
-#    process_new_digests 
-#    reply_to_digest_message
-#    repair_message_order
-#    consolidate_threads_single
-#    delete_deletables
-#);
 use Test::_Test_MDT;
 use File::Copy;
 use Cwd;
@@ -29,7 +22,7 @@ use warnings;
 our (%digest_structure, %digest_output_format);
 # variables imported from $data_file
 our %unix = map {$_, 1} 
-              qw| Unix linux darwin freebsd netbsd openbsd cygwin solaris |;
+    qw| Unix linux darwin freebsd netbsd openbsd mirbsd cygwin solaris |;
 
 my $data_file = 'samples/digest.data';
 require $data_file;
@@ -59,8 +52,6 @@ $pw32u_thrdir = "$pw32u_config_out{'dir_threads'}";
 # (by observation)
 
 my (@pw32u_tp);
-# if ($^O eq 'Unix' or $^O eq 'linux') {
-# if ($^O =~ /^(Unix|linux|darwin|freebsd|netbsd|openbsd|cygwin)/ ) {
 if ($unix{$^O}) {     # 3/11/2004 revision
     @pw32u_tp = sort {lc($a) cmp lc($b)} (
         'Net::SSH::Perl.thr.txt',
@@ -320,21 +311,6 @@ chdir $startdir or die "Couldn't change back to $startdir: $!";
 $dir_threads_orig = $pw32u_config_out{'dir_threads'};
 $pw32u_config_out{'dir_threads'} = "$startdir/t/repair/pw32u";
 
-# make predictions
-
-#|foreach my $orig (@pw32u_tp) {
-#|	if ($orig =~ /(.*)(\.thr\.txt)$/) {
-#|		push(@pw32u_fp, "$1.fix$2");
-#|	} else {
-#|		die "Couldn't predict name of fixed file: $!";
-#|	}
-#|}
-#|
-#|for (my $k=0; $k <= $#pw32u_tp; $k++) {
-#|	$pw32u_fp{$pw32u_fp[$k]}     = $pw32u_tp{$pw32u_tp[$k]};
-#|	$pw32u_fmessp{$pw32u_fp[$k]} = $pw32u_messp{$pw32u_tp[$k]};
-#|}
-
 @pw32u_fp = ( qw|
         Perl_and_delphi_interaction_query.fix.thr.txt
         qx_broken_on_Win98.fix.thr.txt
@@ -379,7 +355,6 @@ opendir DIR, $repair_dir or die "Couldn't open dir: $!";
 @pw32u_fc = sort {lc($a) cmp lc($b)} grep {/\.fix\.thr\.txt$/} readdir DIR;
 closedir DIR or die "Couldn't close dir: $!";
 
-# ok(@pw32u_fc == 3, '3 threads fixed from pw32u');
 ok(@pw32u_fc == 2, '2 threads fixed from pw32u');# 30
 
 # test whether fixed files have names predicted
@@ -388,9 +363,6 @@ ok($pw32u_fp[0] eq $pw32u_fc[0], 'Perl_and_delphi_interaction_query.thr.txt');# 
 ok($pw32u_fp[1] eq $pw32u_fc[1], 'qx_broken_on_Win98.fix.thr.txt');# 32
 
 
-#my $lcfpw = List::Compare->new(\@pw32u_fp, \@pw32u_fc);
-#ok( ($lcfpw->get_intersection()) == @pw32u_fp, 
-#    'all pw32u fixed threads predicted have been created');
 @intersect = get_intersection(\@pw32u_fp, \@pw32u_fc);
 ok(@intersect == @pw32u_fp,             # 33
     'all pw32u fixed threads predicted have been created');
@@ -496,11 +468,6 @@ opendir DIR, $consol_out_dir or die "Couldn't open dir: $!";
                grep {/\.thr\.txt\.DELETABLE$/} 
                readdir DIR;
 closedir DIR or die "Couldn't close dir: $!";
-
-#my $dump = "$startdir/t/dump";
-#open DUMP, ">$dump" or die "Couldn't open $dump for writing: $!";
-#print DUMP Dumper(\@del_predicted, \@del_created);
-#close DUMP or die "Couldn't close $dump after writing: $!";
 
 # test whether correct number of deletable files were created
 

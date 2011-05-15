@@ -1,8 +1,8 @@
 # README for Mail::Digest::Tools 
 Mail::Digest::Tools - Tools for digest versions of mailing lists
 
-This document refers to version 2.11 of Mail::Digest::Tools, 
-released October 23, 2004.
+This document refers to version 2.12 of Mail::Digest::Tools, 
+released May 14, 2011.
 
 This module is not currently expected to work on operating systems other 
 than Unix-like systems (including Linux, FreeBSD, Solaris and Darwin) 
@@ -11,9 +11,9 @@ and Win32.
 To install this module on your system, place the tarball archive file in a 
 temporary directory and call the following:
 
-% gunzip Mail-Digest-Tools-2.11.tar.gz
-% tar xf Mail-Digest-Tools-2.11.tar
-% cd Mail-Digest-Tools-2.11
+% gunzip Mail-Digest-Tools-2.12.tar.gz
+% tar xf Mail-Digest-Tools-2.12.tar
+% cd Mail-Digest-Tools-2.12
 % perl Makefile.PL
 % make
 % make test
@@ -57,9 +57,9 @@ In sending e-mail to the author, please put "Mail::Digest::Tools" or
 "Mail-Digest-Tools" in the subject line.
 
 Author:  James E. Keenan (jkeenan@cpan.org).
-Originally created August 21, 2000.  Last modified October 23, 2004.
+Originally created August 21, 2000.  Last modified May 14, 2011.
 
-Copyright (c) 2000-04 James E. Keenan.  United States.  All rights reserved. 
+Copyright (c) 2000-11 James E. Keenan.  United States.  All rights reserved. 
 This is free software and may be distributed under the same terms as Perl
 itself.
 

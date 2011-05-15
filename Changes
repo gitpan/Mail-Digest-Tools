@@ -29,3 +29,5 @@ xxxx  Sat Feb 14 10:27:53 2004
 2.11  Sat Oct 23 00:00:00 EDT 2004
       Fixed several errors which resulted in "Bizarre copy of hash in leave" error when running test suite under Devel::Cover.
 
+2.12  Sat May 14 22:49:31 EDT 2011
+      Added 'mirbsd' to lists of Unix-ish OSes.

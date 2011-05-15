@@ -1,5 +1,5 @@
 package Mail::Digest::Tools;
-$VERSION = 2.11;        # 10/23/2004
+$VERSION = 2.12;        # 05/14/2011
 use strict;
 use warnings;
 use Time::Local;
@@ -22,7 +22,7 @@ our %EXPORT_TAGS = (
 our %month30 = map {$_, 1} (4,6,9,11);
 our %month31 = map {$_, 1} (1,3,5,7,8,10,12);
 our %unix    = map {$_, 1} 
-                 qw| Unix linux darwin freebsd netbsd openbsd cygwin solaris |;
+    qw| Unix linux darwin freebsd netbsd openbsd mirbsd cygwin solaris |;
 
 ############################### Initializer ###################################
 
@@ -1273,7 +1273,7 @@ Mail::Digest::Tools - Tools for digest versions of mailing lists
 
 =head1 VERSION
 
-This document refers to version 2.11 of digest.pl, released October 23, 2004.
+This document refers to version 2.12 of digest.pl, released May 14, 2011.
 
 =head1 SYNOPSIS
 
@@ -3846,13 +3846,15 @@ v2.10 (3/15/2004):  Corrections to README and documentation only.
 
 v2.11 (10/23/2004):  Fixed several errors which resulted in "Bizarre copy of hash in leave" error when running test suite under Devel::Cover.
 
+v2.12 (05/14/2011):  Added 'mirbsd' to list of Unixish-OSes.
+
 =head1 AUTHOR
 
 James E. Keenan (F<jkeenan@cpan.org>).
 
 Creation date: August 21, 2000.
-Last modification date: October 23, 2004.
-Copyright (c) 2000-2004 James E. Keenan.  United States.  All rights reserved.
+Last modification date: May 14, 2011.
+Copyright (c) 2000-2011 James E. Keenan.  United States.  All rights reserved.
 
 This software is distributed with absolutely no warranty, express or implied.  
 Use it at your own risk.  This is free software which you may distribute under 
